@@ -239,8 +239,9 @@ class Board(QFrame):
 
                 if shape != Tetrominoe.no_shape:
                     self.draw_square(painter,
-                                    rect.left() + j * self.square_width(),
-                                    boardTop + i * self.square_height(), shape)
+                                     rect.left() + j * self.square_width(),
+                                     boardTop + i * self.square_height(),
+                                     shape)
 
             if self.curPiece.shape() != Tetrominoe.no_shape:
 
@@ -250,9 +251,9 @@ class Board(QFrame):
                     y = self.curY - self.curPiece.y(i)
 
                     self.draw_square(painter,
-                                    rect.left() + x * self.square_width(),
-                                    boardTop + (Board.board_height - y - 1) * self.square_height(),
-                                    self.curPiece.shape())
+                                     rect.left() + x * self.square_width(),
+                                     boardTop + (Board.board_height - y - 1) * self.square_height(),
+                                     self.curPiece.shape())
 
     def keyPressEvent(self, event):
         """
@@ -511,6 +512,13 @@ class Tetrominoe(object):
 
 
 class Shape(object):
+    """
+    Represents a Tetromino shape.
+
+    Attributes:
+        coords (list): A list of coordinates representing the shape.
+        pieceShape (int): The type of Tetromino shape.
+    """
 
     coords_table = (
         ((0, 0),     (0, 0),     (0, 0),     (0, 0)),
@@ -524,18 +532,32 @@ class Shape(object):
     )
 
     def __init__(self):
+        """
+        Initializes a new Shape object.
+        """
 
         self.coords = [[0,0] for i in range(4)]
         self.pieceShape = Tetrominoe.no_shape
 
         self.set_shape(Tetrominoe.no_shape)
 
-
     def shape(self):
+        """
+        Returns the type of Tetromino shape.
+
+        Returns:
+            int: The type of Tetromino shape.
+        """
+
         return self.pieceShape
 
-
     def set_shape(self, shape):
+        """
+        Sets the shape of the Tetromino.
+
+        Args:
+            shape (int): The type of Tetromino shape.
+        """
 
         table = Shape.coords_table[shape]
 
@@ -545,28 +567,68 @@ class Shape(object):
 
         self.pieceShape = shape
 
-
     def set_random_shape(self):
+        """
+        Sets a random shape for the Tetromino.
+        """
+
         self.set_shape(random.randint(1, 7))
 
-
     def x(self, index):
+        """
+        Returns the x-coordinate of a point in the shape.
+
+        Args:
+            index (int): The index of the point.
+
+        Returns:
+            int: The x-coordinate of the point.
+        """
+
         return self.coords[index][0]
 
-
     def y(self, index):
+        """
+        Returns the y-coordinate of a point in the shape.
+
+        Args:
+            index (int): The index of the point.
+
+        Returns:
+            int: The y-coordinate of the point.
+        """
+
         return self.coords[index][1]
 
-
     def set_x(self, index, x):
+        """
+        Sets the x-coordinate of a point in the shape.
+
+        Args:
+            index (int): The index of the point.
+            x (int): The new x-coordinate.
+        """
+
         self.coords[index][0] = x
 
-
     def set_y(self, index, y):
+        """
+        Sets the y-coordinate of a point in the shape.
+
+        Args:
+            index (int): The index of the point.
+            y (int): The new y-coordinate.
+        """
+
         self.coords[index][1] = y
 
-
     def min_x(self):
+        """
+        Returns the minimum x-coordinate of the shape.
+
+        Returns:
+            int: The minimum x-coordinate.
+        """
 
         m = self.coords[0][0]
         for i in range(4):
@@ -574,18 +636,27 @@ class Shape(object):
 
         return m
 
-
-
     def max_x(self):
+        """
+        Returns the maximum x-coordinate of the shape.
 
-            m = self.coords[0][0]
-            for i in range(4):
-                m = max(m, self.coords[i][0])
+        Returns:
+            int: The maximum x-coordinate.
+        """
 
-            return m
+        m = self.coords[0][0]
+        for i in range(4):
+            m = max(m, self.coords[i][0])
 
+        return m
 
     def min_y(self):
+        """
+        Returns the minimum y-coordinate of the shape.
+
+        Returns:
+            int: The minimum y-coordinate.
+        """
 
         m = self.coords[0][1]
         for i in range(4):
@@ -593,8 +664,13 @@ class Shape(object):
 
         return m
 
-
     def max_y(self):
+        """
+        Returns the maximum y-coordinate of the shape.
+
+        Returns:
+            int: The maximum y-coordinate.
+        """
 
         m = self.coords[0][1]
         for i in range(4):
@@ -602,8 +678,13 @@ class Shape(object):
 
         return m
 
-
     def rotate_left(self):
+        """
+        Rotates the shape to the left.
+
+        Returns:
+            Shape: The rotated shape.
+        """
 
         if self.pieceShape == Tetrominoe.square_shape:
             return self
@@ -618,8 +699,13 @@ class Shape(object):
 
         return result
 
-
     def rotate_right(self):
+        """
+        Rotates the shape to the right.
+
+        Returns:
+            Shape: The rotated shape.
+        """
 
         if self.pieceShape == Tetrominoe.square_shape:
             return self
@@ -636,6 +722,9 @@ class Shape(object):
 
 
 if __name__ == '__main__':
+    """
+    Runs the Tetris application.
+    """
 
     app = QApplication([])
     tetris = Tetris()
