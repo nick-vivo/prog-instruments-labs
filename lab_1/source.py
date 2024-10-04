@@ -29,7 +29,7 @@ class Tetris(QMainWindow):
         super().__init__()
         self.init_ui()
 
-    def init_ui(self):
+    def init_ui(self) -> None:
         """
         Initializes the game interface.
 
@@ -52,7 +52,7 @@ class Tetris(QMainWindow):
         self.setWindowTitle('Tetris')
         self.show()
 
-    def center(self):
+    def center(self) -> None:
         """
         Centers the game window on the screen.
 
@@ -118,7 +118,7 @@ class Board(QFrame):
         super().__init__(parent)
         self.init_board()
 
-    def init_board(self):
+    def init_board(self) -> None:
         """
         Initializes the game board state.
         """
@@ -136,7 +136,7 @@ class Board(QFrame):
         self.isPaused = False
         self.clear_board()
 
-    def shape_at(self, x, y):
+    def shape_at(self, x: int, y: int) -> int:
         """
         Returns the shape at the given coordinates.
 
@@ -150,7 +150,7 @@ class Board(QFrame):
 
         return self.board[(y * Board.board_width) + x]
 
-    def set_shape_at(self, x, y, shape):
+    def set_shape_at(self, x: int, y: int, shape: int) -> None:
         """
         Sets the shape at the given coordinates.
 
@@ -162,7 +162,7 @@ class Board(QFrame):
 
         self.board[(y * Board.board_width) + x] = shape
 
-    def square_width(self):
+    def square_width(self) -> int:
         """
         Returns the width of a square on the board.
 
@@ -172,7 +172,7 @@ class Board(QFrame):
 
         return self.contentsRect().width() // Board.board_width
 
-    def square_height(self):
+    def square_height(self) -> int:
         """
         Returns the height of a square on the board.
 
@@ -182,7 +182,7 @@ class Board(QFrame):
 
         return self.contentsRect().height() // Board.board_height
 
-    def start(self):
+    def start(self) -> None:
         """
         Starts the game.
         """
@@ -200,7 +200,7 @@ class Board(QFrame):
         self.new_piece()
         self.timer.start(Board.speed, self)
 
-    def pause(self):
+    def pause(self) -> None:
         """
         Pauses or resumes the game.
         """
@@ -319,7 +319,7 @@ class Board(QFrame):
         else:
             super(Board, self).timerEvent(event)
 
-    def clear_board(self):
+    def clear_board(self) -> None:
         """
         Clears the game board by setting all shapes to no_shape.
         """
@@ -327,7 +327,7 @@ class Board(QFrame):
         for i in range(Board.board_height * Board.board_width):
             self.board.append(Tetrominoe.no_shape)
 
-    def drop_down(self):
+    def drop_down(self) -> None:
         """
         Drops the current piece down as far as possible.
         """
@@ -343,7 +343,7 @@ class Board(QFrame):
 
         self.piece_dropped()
 
-    def one_line_down(self):
+    def one_line_down(self) -> None:
         """
         Moves the current piece down one line.
         """
@@ -351,7 +351,7 @@ class Board(QFrame):
         if not self.try_move(self.curPiece, self.curX, self.curY - 1):
             self.piece_dropped()
 
-    def piece_dropped(self):
+    def piece_dropped(self) -> None:
         """
         Handles the piece being dropped.
 
@@ -370,7 +370,7 @@ class Board(QFrame):
         if not self.isWaitingAfterLine:
             self.new_piece()
 
-    def remove_full_lines(self):
+    def remove_full_lines(self) -> None:
         """
         Removes full lines from the board.
 
@@ -411,7 +411,7 @@ class Board(QFrame):
             self.curPiece.set_shape(Tetrominoe.no_shape)
             self.update()
 
-    def new_piece(self):
+    def new_piece(self) -> None:
         """
         Starts a new piece.
 
@@ -430,7 +430,7 @@ class Board(QFrame):
             self.isStarted = False
             self.msg2Statusbar.emit("Game over")
 
-    def try_move(self, new_piece, newX, newY):
+    def try_move(self, new_piece, newX: int, newY: int) -> bool:
         """
         Tries to move the piece to a new position.
 
@@ -463,7 +463,7 @@ class Board(QFrame):
 
         return True
 
-    def draw_square(self, painter, x, y, shape):
+    def draw_square(self, painter: QPainter, x: int, y: int, shape: int) -> None:
         """
         Draws a square on the board.
 
