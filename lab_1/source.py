@@ -11,15 +11,34 @@ from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication
 
 
 class Tetris(QMainWindow):
+    """
+    The main class for the Tetris game.
+
+    This class inherits from QMainWindow and implements the main game logic.
+    """
 
     def __init__(self):
-        super().__init__()
+        """
+        Initializes the Tetris game.
 
+        Calls the parent class constructor and initializes the game interface.
+
+        Note:
+            This method is the constructor for the class.
+        """
+        super().__init__()
         self.initUI()
 
-
     def initUI(self):
+        """
+        Initializes the game interface.
 
+        Creates the game board, sets it as the central widget,
+        configures the status bar, and starts the game.
+
+        Note:
+            This method is responsible for setting up the game interface.
+        """
         self.tboard = Board(self)
         self.setCentralWidget(self.tboard)
 
@@ -33,13 +52,20 @@ class Tetris(QMainWindow):
         self.setWindowTitle('Tetris')
         self.show()
 
-
     def center(self):
+        """
+        Centers the game window on the screen.
 
+        Calculates the screen center coordinates and moves the game window
+        to that position.
+
+        Note:
+            This method is used to position the game window on the screen.
+        """
         screen = QDesktopWidget().screenGeometry()
         size = self.geometry()
-        self.move(int((screen.width()-size.width())/2), int((screen.height()-size.height())/2))
-
+        self.move(int((screen.width()-size.width())/2),
+                  int((screen.height()-size.height())/2))
 
 
 class Board(QFrame):
