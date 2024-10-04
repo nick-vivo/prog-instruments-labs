@@ -69,6 +69,37 @@ class Tetris(QMainWindow):
 
 
 class Board(QFrame):
+    """
+    Represents a Tetris game board.
+
+    Attributes:
+        msg2Statusbar (pyqtSignal): Signal emitted to update the status bar.
+        BoardWidth (int): The width of the game board.
+        BoardHeight (int): The height of the game board.
+        Speed (int): The speed of the game.
+
+    Methods:
+        __init__(parent): Initializes the game board with the given parent.
+        initBoard(): Initializes the game board state.
+        shapeAt(x, y): Returns the shape at the given coordinates.
+        setShapeAt(x, y, shape): Sets the shape at the given coordinates.
+        squareWidth(): Returns the width of a square on the board.
+        squareHeight(): Returns the height of a square on the board.
+        start(): Starts the game.
+        pause(): Pauses or resumes the game.
+        paintEvent(event): Handles painting of the game board.
+        keyPressEvent(event): Handles key press events.
+        timerEvent(event): Handles timer events.
+        clearBoard(): Clears the game board.
+        dropDown(): Drops the current piece down.
+        oneLineDown(): Moves the current piece down one line.
+        pieceDropped(): Handles the piece being dropped.
+        removeFullLines(): Removes full lines from the game board.
+        newPiece(): Creates a new piece.
+        tryMove(newPiece, newX, newY): Tries to move the piece to a
+        new position.
+        drawSquare(painter, x, y, shape): Draws a square on the game board.
+    """
 
     msg2Statusbar = pyqtSignal(str)
 
@@ -77,12 +108,20 @@ class Board(QFrame):
     Speed = 300
 
     def __init__(self, parent):
-        super().__init__(parent)
+        """
+        Initializes the game board with the given parent.
 
+        Args:
+            parent: The parent widget of the game board.
+        """
+
+        super().__init__(parent)
         self.initBoard()
 
-
     def initBoard(self):
+        """
+        Initializes the game board state.
+        """
 
         self.timer = QBasicTimer()
         self.isWaitingAfterLine = False
@@ -97,24 +136,56 @@ class Board(QFrame):
         self.isPaused = False
         self.clearBoard()
 
-
     def shapeAt(self, x, y):
+        """
+        Returns the shape at the given coordinates.
+
+        Args:
+            x (int): The x-coordinate of the shape.
+            y (int): The y-coordinate of the shape.
+
+        Returns:
+            int: The shape at the given coordinates.
+        """
+
         return self.board[(y * Board.BoardWidth) + x]
 
-
     def setShapeAt(self, x, y, shape):
+        """
+        Sets the shape at the given coordinates.
+
+        Args:
+            x (int): The x-coordinate of the shape.
+            y (int): The y-coordinate of the shape.
+            shape (int): The shape to set.
+        """
+
         self.board[(y * Board.BoardWidth) + x] = shape
 
-
     def squareWidth(self):
+        """
+        Returns the width of a square on the board.
+
+        Returns:
+            int: The width of a square on the board.
+        """
+
         return self.contentsRect().width() // Board.BoardWidth
 
-
     def squareHeight(self):
+        """
+        Returns the height of a square on the board.
+
+        Returns:
+            int: The height of a square on the board.
+        """
+
         return self.contentsRect().height() // Board.BoardHeight
 
-
     def start(self):
+        """
+        Starts the game.
+        """
 
         if self.isPaused:
             return
@@ -129,8 +200,10 @@ class Board(QFrame):
         self.newPiece()
         self.timer.start(Board.Speed, self)
 
-
     def pause(self):
+        """
+        Pauses or resumes the game.
+        """
 
         if not self.isStarted:
             return
@@ -148,20 +221,26 @@ class Board(QFrame):
         self.update()
 
     def paintEvent(self, event):
+        """
+        Handles painting of the game board.
 
-            painter = QPainter(self)
-            rect = self.contentsRect()
+        Args:
+            event: The paint event.
+        """
 
-            boardTop = rect.bottom() - Board.BoardHeight * self.squareHeight()
+        painter = QPainter(self)
+        rect = self.contentsRect()
 
-            for i in range(Board.BoardHeight):
-                for j in range(Board.BoardWidth):
-                    shape = self.shapeAt(j, Board.BoardHeight - i - 1)
+        boardTop = rect.bottom() - Board.BoardHeight * self.squareHeight()
 
-                    if shape != Tetrominoe.NoShape:
-                        self.drawSquare(painter,
-                            rect.left() + j * self.squareWidth(),
-                            boardTop + i * self.squareHeight(), shape)
+        for i in range(Board.BoardHeight):
+            for j in range(Board.BoardWidth):
+                shape = self.shapeAt(j, Board.BoardHeight - i - 1)
+
+                if shape != Tetrominoe.NoShape:
+                    self.drawSquare(painter,
+                                    rect.left() + j * self.squareWidth(),
+                                    boardTop + i * self.squareHeight(), shape)
 
             if self.curPiece.shape() != Tetrominoe.NoShape:
 
@@ -169,12 +248,19 @@ class Board(QFrame):
 
                     x = self.curX + self.curPiece.x(i)
                     y = self.curY - self.curPiece.y(i)
-                    self.drawSquare(painter, rect.left() + x * self.squareWidth(),
-                        boardTop + (Board.BoardHeight - y - 1) * self.squareHeight(),
-                        self.curPiece.shape())
 
+                    self.drawSquare(painter,
+                                    rect.left() + x * self.squareWidth(),
+                                    boardTop + (Board.BoardHeight - y - 1) * self.squareHeight(),
+                                    self.curPiece.shape())
 
     def keyPressEvent(self, event):
+        """
+        Handles key press events.
+
+        Args:
+            event: The key press event.
+        """
 
         if not self.isStarted or self.curPiece.shape() == Tetrominoe.NoShape:
             super(Board, self).keyPressEvent(event)
@@ -210,8 +296,16 @@ class Board(QFrame):
         else:
             super(Board, self).keyPressEvent(event)
 
-
     def timerEvent(self, event):
+        """
+        Handles timer events.
+
+        Args:
+            event: The timer event.
+
+        If the event is triggered by the game timer, it either starts a new
+        piece or moves the current piece down.
+        """
 
         if event.timerId() == self.timer.timerId():
 
@@ -224,14 +318,18 @@ class Board(QFrame):
         else:
             super(Board, self).timerEvent(event)
 
-
     def clearBoard(self):
+        """
+        Clears the game board by setting all shapes to NoShape.
+        """
 
         for i in range(Board.BoardHeight * Board.BoardWidth):
             self.board.append(Tetrominoe.NoShape)
 
-
     def dropDown(self):
+        """
+        Drops the current piece down as far as possible.
+        """
 
         newY = self.curY
 
@@ -244,14 +342,21 @@ class Board(QFrame):
 
         self.pieceDropped()
 
-
     def oneLineDown(self):
+        """
+        Moves the current piece down one line.
+        """
 
         if not self.tryMove(self.curPiece, self.curX, self.curY - 1):
             self.pieceDropped()
 
-
     def pieceDropped(self):
+        """
+        Handles the piece being dropped.
+
+        Sets the shape of the dropped piece on the board, removes full lines,
+        and starts a new piece if necessary.
+        """
 
         for i in range(4):
 
@@ -265,42 +370,52 @@ class Board(QFrame):
             self.newPiece()
 
     def removeFullLines(self):
+        """
+        Removes full lines from the board.
 
-            numFullLines = 0
-            rowsToRemove = []
+        Shifts down all lines above the full lines and updates the number of
+        removed lines.
+        """
 
-            for i in range(Board.BoardHeight):
+        numFullLines = 0
+        rowsToRemove = []
 
-                n = 0
+        for i in range(Board.BoardHeight):
+
+            n = 0
+            for j in range(Board.BoardWidth):
+                if not self.shapeAt(j, i) == Tetrominoe.NoShape:
+                    n = n + 1
+
+            if n == 10:
+                rowsToRemove.append(i)
+
+        rowsToRemove.reverse()
+
+        for m in rowsToRemove:
+
+            for k in range(m, Board.BoardHeight):
+
                 for j in range(Board.BoardWidth):
-                    if not self.shapeAt(j, i) == Tetrominoe.NoShape:
-                        n = n + 1
+                    self.setShapeAt(j, k, self.shapeAt(j, k + 1))
 
-                if n == 10:
-                    rowsToRemove.append(i)
+        numFullLines = numFullLines + len(rowsToRemove)
 
-            rowsToRemove.reverse()
+        if numFullLines > 0:
 
+            self.numLinesRemoved = self.numLinesRemoved + numFullLines
+            self.msg2Statusbar.emit(str(self.numLinesRemoved))
 
-            for m in rowsToRemove:
-
-                for k in range(m, Board.BoardHeight):
-                    for l in range(Board.BoardWidth):
-                            self.setShapeAt(l, k, self.shapeAt(l, k + 1))
-
-            numFullLines = numFullLines + len(rowsToRemove)
-
-            if numFullLines > 0:
-
-                self.numLinesRemoved = self.numLinesRemoved + numFullLines
-                self.msg2Statusbar.emit(str(self.numLinesRemoved))
-
-                self.isWaitingAfterLine = True
-                self.curPiece.setShape(Tetrominoe.NoShape)
-                self.update()
-
+            self.isWaitingAfterLine = True
+            self.curPiece.setShape(Tetrominoe.NoShape)
+            self.update()
 
     def newPiece(self):
+        """
+        Starts a new piece.
+
+        Creates a new random piece and sets its position on the board.
+        """
 
         self.curPiece = Shape()
         self.curPiece.setRandomShape()
@@ -314,16 +429,27 @@ class Board(QFrame):
             self.isStarted = False
             self.msg2Statusbar.emit("Game over")
 
-
-
     def tryMove(self, newPiece, newX, newY):
+        """
+        Tries to move the piece to a new position.
+
+        Args:
+            newPiece: The new piece to move.
+            newX (int): The new x-coordinate of the piece.
+            newY (int): The new y-coordinate of the piece.
+
+        Returns:
+            bool: True if the move is successful, False otherwise.
+        """
 
         for i in range(4):
 
             x = newX + newPiece.x(i)
             y = newY - newPiece.y(i)
 
-            if x < 0 or x >= Board.BoardWidth or y < 0 or y >= Board.BoardHeight:
+            if (x < 0 or x >= Board.BoardWidth or
+                    y < 0 or y >= Board.BoardHeight):
+
                 return False
 
             if self.shapeAt(x, y) != Tetrominoe.NoShape:
@@ -336,25 +462,41 @@ class Board(QFrame):
 
         return True
 
-
     def drawSquare(self, painter, x, y, shape):
+        """
+        Draws a square on the board.
+
+        Args:
+            painter: The painter to use.
+            x (int): The x-coordinate of the square.
+            y (int): The y-coordinate of the square.
+            shape (int): The shape of the square.
+
+        Draws a square on the board with the specified shape and color.
+        """
 
         colorTable = [0x000000, 0xCC6666, 0x66CC66, 0x6666CC,
                       0xCCCC66, 0xCC66CC, 0x66CCCC, 0xDAAA00]
 
         color = QColor(colorTable[shape])
         painter.fillRect(x + 1, y + 1, self.squareWidth() - 2,
-            self.squareHeight() - 2, color)
+                         self.squareHeight() - 2, color)
 
         painter.setPen(color.lighter())
         painter.drawLine(x, y + self.squareHeight() - 1, x, y)
         painter.drawLine(x, y, x + self.squareWidth() - 1, y)
 
         painter.setPen(color.darker())
+
         painter.drawLine(x + 1, y + self.squareHeight() - 1,
-            x + self.squareWidth() - 1, y + self.squareHeight() - 1)
+                         x + self.squareWidth() - 1,
+                         y + self.squareHeight() - 1)
+
         painter.drawLine(x + self.squareWidth() - 1,
-            y + self.squareHeight() - 1, x + self.squareWidth() - 1, y + 1)
+                         y + self.squareHeight() - 1,
+                         x + self.squareWidth() - 1,
+                         y + 1)
+
 
 class Tetrominoe(object):
 
