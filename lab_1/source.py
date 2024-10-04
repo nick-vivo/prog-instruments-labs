@@ -600,7 +600,7 @@ class Shape(object):
 
         return self.coords[index][1]
 
-    def set_x(self, index, x) -> int:
+    def set_x(self, index: int, x: int) -> int:
         """
         Sets the x-coordinate of a point in the shape.
 
