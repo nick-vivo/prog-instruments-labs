@@ -551,7 +551,7 @@ class Shape(object):
 
         return self.pieceShape
 
-    def set_shape(self, shape):
+    def set_shape(self, shape: int):
         """
         Sets the shape of the Tetromino.
 
@@ -574,7 +574,7 @@ class Shape(object):
 
         self.set_shape(random.randint(1, 7))
 
-    def x(self, index):
+    def x(self, index: int):
         """
         Returns the x-coordinate of a point in the shape.
 
@@ -587,7 +587,7 @@ class Shape(object):
 
         return self.coords[index][0]
 
-    def y(self, index):
+    def y(self, index: int) -> int:
         """
         Returns the y-coordinate of a point in the shape.
 
@@ -600,7 +600,7 @@ class Shape(object):
 
         return self.coords[index][1]
 
-    def set_x(self, index, x):
+    def set_x(self, index, x) -> int:
         """
         Sets the x-coordinate of a point in the shape.
 
@@ -611,7 +611,7 @@ class Shape(object):
 
         self.coords[index][0] = x
 
-    def set_y(self, index, y):
+    def set_y(self, index: int, y: int) -> int:
         """
         Sets the y-coordinate of a point in the shape.
 
@@ -622,7 +622,7 @@ class Shape(object):
 
         self.coords[index][1] = y
 
-    def min_x(self):
+    def min_x(self) -> int:
         """
         Returns the minimum x-coordinate of the shape.
 
@@ -636,7 +636,7 @@ class Shape(object):
 
         return m
 
-    def max_x(self):
+    def max_x(self) -> int:
         """
         Returns the maximum x-coordinate of the shape.
 
@@ -650,7 +650,7 @@ class Shape(object):
 
         return m
 
-    def min_y(self):
+    def min_y(self) -> int:
         """
         Returns the minimum y-coordinate of the shape.
 
@@ -664,7 +664,7 @@ class Shape(object):
 
         return m
 
-    def max_y(self):
+    def max_y(self) -> int:
         """
         Returns the maximum y-coordinate of the shape.
 
