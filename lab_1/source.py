@@ -1,9 +1,13 @@
 # https://vc.ru/dev/638343-tri-krutye-igry-na-python-s-ishodnikami
 
-import sys, random
-from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication
-from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
+import sys
+import random
+
 from PyQt5.QtGui import QPainter, QColor
+
+from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal
+
+from PyQt5.QtWidgets import QMainWindow, QFrame, QDesktopWidget, QApplication
 
 
 class Tetris(QMainWindow):
